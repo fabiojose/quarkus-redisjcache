@@ -1,0 +1,19 @@
+---
+artifact: ${project.groupId}:${project.artifactId}:${project.version}
+name: Quarkus Cache Redis
+description: Distributed cache with Redis and JCache
+metadata:
+  keywords:
+    - quarkus-cache-redis
+    - redis
+    - redisson
+    - jcache
+    - jsr107
+    - cache
+    - caching
+  guide: 
+  categories:
+    - "data"
+  status: "preview"
+  config:
+    - "quarkus.cache.redis."
