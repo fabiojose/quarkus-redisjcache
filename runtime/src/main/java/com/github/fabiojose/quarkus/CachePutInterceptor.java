@@ -1,5 +1,8 @@
 package com.github.fabiojose.quarkus;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.quarkus.cache.runtime.AbstractCache;
 import io.quarkus.cache.runtime.CacheInterceptionContext;
 import io.quarkus.cache.runtime.CacheInterceptor;
@@ -16,163 +19,167 @@ import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-
-import com.esotericsoftware.kryo.Kryo;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
 import org.redisson.config.Config;
 import org.redisson.jcache.configuration.RedissonConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
- * Thanks https://github.com/quarkusio/quarkus/blob/main/extensions/cache/runtime/src/main/java/io/quarkus/cache/runtime/CacheResultInterceptor.java
+ * @author fabiojose@gmail.com
  */
 @CachePut
 @Interceptor
 @Priority(1000)
 public class CachePutInterceptor extends CacheInterceptor {
 
-  private static final String INTERCEPTOR_BINDING_ERROR_MSG = "No binding type";
+    private static final String INTERCEPTOR_BINDING_ERROR_MSG =
+        "No binding type";
 
-  private static final Logger log = LoggerFactory.getLogger(
-    CachePutInterceptor.class
-  );
+    private static final Logger log = LoggerFactory.getLogger(
+        CachePutInterceptor.class
+    );
 
-  @Inject
-  CacheManager cacheManager;
+    @Inject
+    CacheManager cacheManager;
 
-  @Inject
-  Kryo kryo;
+    @Inject
+    CacheRedisConfig redisConfig;
 
-  @Inject
-  CacheRedisConfig redisConfig;
+    private ObjectMapper yamlMapper;
 
-  private ObjectMapper yamlMapper;
-  private ObjectMapper getYamlMapper() {
-    if(null== yamlMapper){
-        yamlMapper = new ObjectMapper(new YAMLFactory());
+    private ObjectMapper getYamlMapper() {
+        if (null == yamlMapper) {
+            yamlMapper = new ObjectMapper(new YAMLFactory());
+        }
+
+        return yamlMapper;
     }
 
-    return yamlMapper;
-  }
+    private Config redissonYamlConfiguration()
+        throws IOException, JsonProcessingException {
+        final String yaml = getYamlMapper().writeValueAsString(redisConfig);
+        if (log.isDebugEnabled()) {
+            log.info("loaded redisson yaml configuration \n{}", yaml);
+        }
 
-  private Config redissonYamlConfiguration() throws IOException, JsonProcessingException {
+        return Config.fromYAML(yaml);
+    }
 
-    final String yaml = getYamlMapper().writeValueAsString(redisConfig);
-    log.info("redisson yaml configuration \n{}", yaml);
+    private Cache<Object, Object> getCache(String cacheName)
+        throws IOException {
+        Cache<Object, Object> result = cacheManager.getCache(cacheName);
 
-    return Config.fromYAML(yaml);
+        if (null == result) {
+            log.debug("creating cache named as {}", cacheName);
+            final Config cfg = redissonYamlConfiguration();
+            final MutableConfiguration<Object, Object> mutable = new MutableConfiguration<>();
 
-  }
+            mutable.setExpiryPolicyFactory(
+                new CacheRedisExpiryPolicyFactory(
+                    redisConfig.ttl.get(cacheName), cacheName
+                )
+            );
 
-  private Cache<Object, Object> getCache(String cacheName) throws IOException {
-    Cache<Object, Object> result = cacheManager.getCache(cacheName);
+            result =
+                cacheManager.createCache(
+                    cacheName,
+                    RedissonConfiguration.fromConfig(cfg, mutable)
+                );
+            log.debug("cache {} created.", cacheName);
+        }
 
-    if (null == result) {
-      final Config cfg = redissonYamlConfiguration();
+        return result;
+    }
 
-      //TODO: Expiration
-
-      //TODO: CacheKey
-
-      log.info("ttl {}", redisConfig.ttl);
-
-      result =
-        cacheManager.createCache(
-          cacheName,
-          RedissonConfiguration.fromConfig(cfg, new MutableConfiguration<>())
+    @AroundInvoke
+    public Object intercept(InvocationContext context) throws Exception {
+        final CacheInterceptionContext<CachePut> interceptionContext = getInterceptionContext(
+            context,
+            CachePut.class,
+            true
         );
+
+        if (interceptionContext.getInterceptorBindings().isEmpty()) {
+            log.warn(INTERCEPTOR_BINDING_ERROR_MSG);
+            return context.proceed();
+        }
+
+        final CachePut binding = interceptionContext
+            .getInterceptorBindings()
+            .iterator()
+            .next();
+
+        //TODO: CacheKey
+        //TODO: Cache Key as String
+        Object key = getCacheKey(
+            new DefaultCache(binding.cacheName()),
+            interceptionContext.getCacheKeyParameterPositions(),
+            context.getParameters()
+        );
+        key = key.toString();
+
+        log.info(
+            "loading entry with key {} from cache {}",
+            key,
+            binding.cacheName()
+        );
+
+        final Cache<Object, Object> cache = getCache(binding.cacheName());
+
+        Object value = cache.get(key);
+        log.info("loaded value cache key {}: {}", key, value);
+
+        Object result = value;
+
+        if (null == result) {
+            log.debug(
+                "no entry found for key {} in the cache {}",
+                key,
+                binding.cacheName()
+            );
+            result = context.proceed();
+            log.debug("value from called context {}", result);
+
+            cache.put(key, result);
+        }
+
+        return result;
     }
 
-    return result;
-  }
+    private final class DefaultCache extends AbstractCache {
 
-  @AroundInvoke
-  public Object intercept(InvocationContext context) throws Exception {
-    final CacheInterceptionContext<CachePut> interceptionContext = getInterceptionContext(
-      context,
-      CachePut.class,
-      true
-    );
+        private String cacheName;
 
-    if (interceptionContext.getInterceptorBindings().isEmpty()) {
-      log.warn(INTERCEPTOR_BINDING_ERROR_MSG);
-      return context.proceed();
+        DefaultCache(String cacheName) {
+            this.cacheName = cacheName;
+        }
+
+        @Override
+        public String getName() {
+            return cacheName;
+        }
+
+        @Override
+        public CompletableFuture<Object> get(
+            Object key,
+            Function<Object, Object> valueLoader
+        ) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void invalidate(Object key) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void invalidateAll() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Uni<Void> replaceUniValue(Object key, Object emittedValue) {
+            throw new UnsupportedOperationException();
+        }
     }
-
-    final CachePut binding = interceptionContext
-      .getInterceptorBindings()
-      .iterator()
-      .next();
-
-    //TODO: Cache Key as String
-    Object key = getCacheKey(
-      new DefaultCache(binding.cacheName()),
-      interceptionContext.getCacheKeyParameterPositions(),
-      context.getParameters()
-    );
-    key = binding.cacheName();
-
-    log.info(
-      "Loading entry with key {} from cache {}",
-      key,
-      binding.cacheName()
-    );
-
-    final Cache<Object, Object> cache = getCache(binding.cacheName());
-    log.info("Loaded cache instance {}", cache);
-
-    Object value = cache.get(key);
-    log.info("Loaded value cache key {}: {}", key, value);
-
-    Object result = value;
-
-    if (null == result) {
-      result = context.proceed();
-      cache.put(key, result);
-    }
-
-    return result;
-  }
-
-  private final class DefaultCache extends AbstractCache {
-
-    private String cacheName;
-
-    DefaultCache(String cacheName) {
-      this.cacheName = cacheName;
-    }
-
-    @Override
-    public String getName() {
-      return cacheName;
-    }
-
-    @Override
-    public CompletableFuture<Object> get(
-      Object key,
-      Function<Object, Object> valueLoader
-    ) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void invalidate(Object key) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void invalidateAll() {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Uni<Void> replaceUniValue(Object key, Object emittedValue) {
-      throw new UnsupportedOperationException();
-    }
-  }
 }

@@ -1,12 +1,10 @@
 package com.github.fabiojose.quarkus;
 
-import com.esotericsoftware.kryo.Kryo;
 import io.quarkus.arc.runtime.BeanContainer;
 import io.quarkus.runtime.annotations.Recorder;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
-import javax.cache.Caching;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -42,21 +40,12 @@ public class CacheRedisRecorder {
         );
 
         //TODO: Obter cache manager
-        //final CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
-
         final CacheManager cacheManager = container.instance(
             CacheManager.class
         );
         log.info("using cache manager {}", cacheManager);
 
-        //TODO: Obter serializador
-        final Kryo kryo = container.instance(Kryo.class);
-        log.info("using java object serializer {}", kryo);
-
         //TODO: Criar e/ou obter cache
-
-        //TODO: Registrar cacheValueType no kryo
-        kryo.register(cacheValueType);
 
     }
 }

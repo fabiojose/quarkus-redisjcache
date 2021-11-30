@@ -29,11 +29,6 @@
       <artifactId>redisson-quarkus-20</artifactId>
       <version>${redisson.version}</version>
     </dependency>
-    <dependency>
-      <groupId>com.esotericsoftware</groupId>
-      <artifactId>kryo</artifactId>
-      <version>${kryo.version}</version>
-    </dependency>
   </dependencies>
 
   <build>

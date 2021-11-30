@@ -14,6 +14,7 @@ Distributed caching with Redis and JCache (JSR-107).
 - Redis Server modes:
   - Single Server
   - Cluster Servers
+- Custom types must implements `java.io.Serializable`
 
 ## Redis configuration with Redisson
 
