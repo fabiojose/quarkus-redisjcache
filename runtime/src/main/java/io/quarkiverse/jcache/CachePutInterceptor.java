@@ -4,12 +4,10 @@ import io.quarkus.cache.runtime.AbstractCache;
 import io.quarkus.cache.runtime.CacheInterceptionContext;
 import io.quarkus.cache.runtime.CacheInterceptor;
 import io.smallrye.mutiny.Uni;
-import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import javax.annotation.Priority;
 import javax.cache.Cache;
-import javax.cache.CacheManager;
 import javax.cache.annotation.CachePut;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -34,28 +32,7 @@ public class CachePutInterceptor extends CacheInterceptor {
     );
 
     @Inject
-    CacheManager cacheManager;
-
-    @Inject
-    JCacheConfigurationFactory configurationFactory;
-
-    private Cache<Object, Object> getCache(String cacheName)
-        throws IOException {
-        Cache<Object, Object> result = cacheManager.getCache(cacheName);
-
-        if (null == result) {
-            log.debug("creating cache named as {}", cacheName);
-
-            result =
-                cacheManager.createCache(
-                    cacheName,
-                    configurationFactory.create(cacheName)
-                );
-            log.debug("cache {} created.", cacheName);
-        }
-
-        return result;
-    }
+    CacheFactory cacheFactory;
 
     @AroundInvoke
     public Object intercept(InvocationContext context) throws Exception {
@@ -84,16 +61,16 @@ public class CachePutInterceptor extends CacheInterceptor {
         );
         key = key.toString();
 
-        log.info(
+        log.debug(
             "loading entry with key {} from cache {}",
             key,
             binding.cacheName()
         );
 
-        final Cache<Object, Object> cache = getCache(binding.cacheName());
+        final Cache<Object, Object> cache = cacheFactory.getOrCreate(binding.cacheName());
 
         Object value = cache.get(key);
-        log.info("loaded value cache key {}: {}", key, value);
+        log.debug("loaded value cache key {}: {}", key, value);
 
         Object result = value;
 
@@ -123,6 +100,11 @@ public class CachePutInterceptor extends CacheInterceptor {
         @Override
         public String getName() {
             return cacheName;
+        }
+
+        @Override
+        public String toString(){
+            return getName();
         }
 
         @Override

@@ -1,5 +1,6 @@
 package io.quarkiverse.jcache.redis;
 
+import io.quarkiverse.jcache.CacheCreationStrategy;
 import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigPhase;
 import io.quarkus.runtime.annotations.ConfigRoot;
@@ -39,6 +40,13 @@ public class RedisConfig {
     @JsonIgnore
     public Map<String, Long> ttl;
 
+    /**
+     * Strategy to create and configure caches.
+     */
+    @ConfigItem(defaultValue = "ON_DEMAND")
+    @JsonIgnore
+    public CacheCreationStrategy creation;
+    
     /**
      * Single instance configuration
      */

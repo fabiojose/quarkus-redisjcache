@@ -1,11 +1,9 @@
 package io.quarkiverse.jcache.redis;
 
+import io.quarkiverse.jcache.CacheCreationStrategy;
+import io.quarkiverse.jcache.CacheFactory;
 import io.quarkus.arc.runtime.BeanContainer;
 import io.quarkus.runtime.annotations.Recorder;
-
-import javax.cache.Cache;
-import javax.cache.CacheManager;
-import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,36 +15,23 @@ public class RedisRecorder {
         RedisRecorder.class
     );
 
-    @Inject
-    RedisConfig config;
-
-    private void createCache(String cacheName, CacheManager manager) {
-        Cache cache = manager.getCache(cacheName);
-        if (null == cache) {
-            //TODO: Configuration
-            manager.createCache(cacheName, null);
-        }
-    }
-
     public void prepare(
         BeanContainer container,
         String cacheName
     ) {
 
-        // TODO: If eager cache bootstrap
+        final RedisConfig config = container.instance(RedisConfig.class);
 
-        log.info(
-            "preparing cache {}",
-            cacheName
-        );
+        if(CacheCreationStrategy.ON_STARTUP.equals(config.creation)){
+            final CacheFactory factory = container.instance(CacheFactory.class);
 
-        //TODO: Obter cache manager
-        final CacheManager cacheManager = container.instance(
-            CacheManager.class
-        );
-        log.info("using cache manager {}", cacheManager);
+            log.info(
+                "creating and configuring cache {}",
+                cacheName
+            );
 
-        //TODO: Criar e/ou obter cache
+            factory.getOrCreate(cacheName);
+        }
 
     }
 }

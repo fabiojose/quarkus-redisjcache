@@ -2,6 +2,8 @@
 
 Distributed caching with Redis and JCache (JSR-107).
 
+> Many thanks for [Redisson JCache](https://redisson.org/glossary/jcache.html).
+
 ## Supported features
 
 - Caching at method level
@@ -10,7 +12,6 @@ Distributed caching with Redis and JCache (JSR-107).
   - `@CachePut`
     - cacheName: attribute to define the cache's name
   - `@CacheKey`: to define the cache's key, instead of `cacheName` as default one.
-  - `@CacheInvalidate`: to invalidate current cache's value
 - Redis Server modes:
   - Single Server
   - Cluster Servers

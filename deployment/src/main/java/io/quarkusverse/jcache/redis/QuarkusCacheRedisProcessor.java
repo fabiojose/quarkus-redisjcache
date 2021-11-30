@@ -3,6 +3,7 @@ package io.quarkusverse.jcache.redis;
 import io.quarkiverse.jcache.CacheManagerProducer;
 import io.quarkiverse.jcache.CachePutInterceptor;
 import io.quarkiverse.jcache.redis.RedisRecorder;
+import io.quarkiverse.jcache.redis.RedisCacheFactory;
 import io.quarkiverse.jcache.redis.RedisJCacheConfigurationFactory;
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.arc.deployment.BeanContainerBuildItem;
@@ -63,7 +64,8 @@ class QuarkusCacheRedisProcessor {
         return new AdditionalBeanBuildItem(
             CacheManagerProducer.class,
             CachePutInterceptor.class,
-            RedisJCacheConfigurationFactory.class
+            RedisJCacheConfigurationFactory.class,
+            RedisCacheFactory.class
         );
     }
 

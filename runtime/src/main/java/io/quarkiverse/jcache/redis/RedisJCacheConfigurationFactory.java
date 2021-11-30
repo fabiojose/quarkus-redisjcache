@@ -5,8 +5,8 @@ import java.io.UncheckedIOException;
 
 import javax.cache.configuration.Configuration;
 import javax.cache.configuration.MutableConfiguration;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import io.quarkiverse.jcache.ExpiryPolicyFactory;
 import io.quarkiverse.jcache.JCacheConfigurationFactory;
 
-@ApplicationScoped
+@Singleton
 public class RedisJCacheConfigurationFactory implements JCacheConfigurationFactory {
     
     private static final Logger log = LoggerFactory.getLogger(
