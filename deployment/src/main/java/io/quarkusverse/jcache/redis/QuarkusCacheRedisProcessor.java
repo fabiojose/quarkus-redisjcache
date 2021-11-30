@@ -1,8 +1,9 @@
-package com.github.fabiojose.java.quarkus.cache.redis.deployment;
+package io.quarkusverse.jcache.redis;
 
-import com.github.fabiojose.quarkus.CachePutInterceptor;
-import com.github.fabiojose.quarkus.CacheRedisProducer;
-import com.github.fabiojose.quarkus.CacheRedisRecorder;
+import io.quarkiverse.jcache.CacheManagerProducer;
+import io.quarkiverse.jcache.CachePutInterceptor;
+import io.quarkiverse.jcache.redis.CacheRedisRecorder;
+import io.quarkiverse.jcache.redis.RedisJCacheConfigurationFactory;
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.arc.deployment.BeanContainerBuildItem;
 import io.quarkus.arc.deployment.InterceptorBindingRegistrarBuildItem;
@@ -22,7 +23,6 @@ import org.jboss.jandex.ClassInfo;
 import org.jboss.jandex.DotName;
 import org.jboss.jandex.IndexView;
 import org.jboss.jandex.MethodInfo;
-import org.jboss.jandex.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,8 +61,9 @@ class QuarkusCacheRedisProcessor {
     @BuildStep
     AdditionalBeanBuildItem additionalBeans() {
         return new AdditionalBeanBuildItem(
-            CacheRedisProducer.class,
-            CachePutInterceptor.class
+            CacheManagerProducer.class,
+            CachePutInterceptor.class,
+            RedisJCacheConfigurationFactory.class
         );
     }
 
@@ -94,17 +95,11 @@ class QuarkusCacheRedisProcessor {
                     .value(CACHE_NAME)
                     .asString();
 
-                //TODO: Obter parametros do método
-                final List<Type> parameters = method.parameters();
-
                 //TODO: Cache do cache
-
-                //TODO: Tipo do valor no cache
 
                 recorder.prepare(
                     containerBuildItem.getValue(),
-                    cacheName,
-                    String.class
+                    cacheName
                 );
 
             } else {

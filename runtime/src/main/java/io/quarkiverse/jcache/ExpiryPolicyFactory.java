@@ -1,4 +1,4 @@
-package com.github.fabiojose.quarkus;
+package io.quarkiverse.jcache;
 
 import java.util.concurrent.TimeUnit;
 import javax.cache.configuration.Factory;
@@ -11,18 +11,18 @@ import org.slf4j.LoggerFactory;
 /**
  * @author fabiojose@gmail.com
  */
-class CacheRedisExpiryPolicyFactory implements Factory<ExpiryPolicy> {
+public class ExpiryPolicyFactory implements Factory<ExpiryPolicy> {
 
     private static final long ETERNAL = -1l;
 
     private static final Logger log = LoggerFactory.getLogger(
-        CacheRedisExpiryPolicyFactory.class
+        ExpiryPolicyFactory.class
     );
 
     private final Long expiry;
     private final String cacheName;
 
-    CacheRedisExpiryPolicyFactory(Long expiryInMillis, String cacheName) {
+    public ExpiryPolicyFactory(Long expiryInMillis, String cacheName) {
         if (null != expiryInMillis) {
             this.expiry = expiryInMillis;
         } else {
@@ -35,7 +35,7 @@ class CacheRedisExpiryPolicyFactory implements Factory<ExpiryPolicy> {
     @Override
     public ExpiryPolicy create() {
         if (expiry != ETERNAL) {
-            return new CacheRedisExpiryPolicy(expiry, cacheName);
+            return new CustomExpiryPolicy(expiry, cacheName);
         }
 
         log.info("cache entries in {} are eternal", cacheName);
@@ -43,15 +43,15 @@ class CacheRedisExpiryPolicyFactory implements Factory<ExpiryPolicy> {
     }
 }
 
-class CacheRedisExpiryPolicy implements ExpiryPolicy {
+class CustomExpiryPolicy implements ExpiryPolicy {
 
     private static final Logger log = LoggerFactory.getLogger(
-        CacheRedisExpiryPolicy.class
+        CustomExpiryPolicy.class
     );
 
     private final Duration duration;
 
-    CacheRedisExpiryPolicy(long millis, String cacheName) {
+    CustomExpiryPolicy(long millis, String cacheName) {
         duration = new Duration(TimeUnit.MILLISECONDS, millis);
         log.info(
             "cache entries in {} has expiration configured with duration of {} {}",

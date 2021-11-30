@@ -1,4 +1,4 @@
-package com.github.fabiojose.quarkus;
+package io.quarkiverse.jcache.redis;
 
 import io.quarkus.arc.runtime.BeanContainer;
 import io.quarkus.runtime.annotations.Recorder;
@@ -30,13 +30,14 @@ public class CacheRedisRecorder {
 
     public void prepare(
         BeanContainer container,
-        String cacheName,
-        Class cacheValueType
+        String cacheName
     ) {
+
+        // TODO: If eager cache bootstrap
+
         log.info(
-            "preparing cache {} and registering the {} for object serializing",
-            cacheName,
-            cacheValueType
+            "preparing cache {}",
+            cacheName
         );
 
         //TODO: Obter cache manager

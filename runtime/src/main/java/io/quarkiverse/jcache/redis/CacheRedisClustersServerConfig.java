@@ -1,4 +1,4 @@
-package com.github.fabiojose.quarkus;
+package io.quarkiverse.jcache.redis;
 
 import io.quarkus.runtime.annotations.ConfigGroup;
 

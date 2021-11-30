@@ -1,8 +1,5 @@
-package com.github.fabiojose.quarkus;
+package io.quarkiverse.jcache;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.quarkus.cache.runtime.AbstractCache;
 import io.quarkus.cache.runtime.CacheInterceptionContext;
 import io.quarkus.cache.runtime.CacheInterceptor;
@@ -14,13 +11,10 @@ import javax.annotation.Priority;
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.annotation.CachePut;
-import javax.cache.configuration.MutableConfiguration;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-import org.redisson.config.Config;
-import org.redisson.jcache.configuration.RedissonConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,27 +37,7 @@ public class CachePutInterceptor extends CacheInterceptor {
     CacheManager cacheManager;
 
     @Inject
-    CacheRedisConfig redisConfig;
-
-    private ObjectMapper yamlMapper;
-
-    private ObjectMapper getYamlMapper() {
-        if (null == yamlMapper) {
-            yamlMapper = new ObjectMapper(new YAMLFactory());
-        }
-
-        return yamlMapper;
-    }
-
-    private Config redissonYamlConfiguration()
-        throws IOException, JsonProcessingException {
-        final String yaml = getYamlMapper().writeValueAsString(redisConfig);
-        if (log.isDebugEnabled()) {
-            log.info("loaded redisson yaml configuration \n{}", yaml);
-        }
-
-        return Config.fromYAML(yaml);
-    }
+    JCacheConfigurationFactory configurationFactory;
 
     private Cache<Object, Object> getCache(String cacheName)
         throws IOException {
@@ -71,19 +45,11 @@ public class CachePutInterceptor extends CacheInterceptor {
 
         if (null == result) {
             log.debug("creating cache named as {}", cacheName);
-            final Config cfg = redissonYamlConfiguration();
-            final MutableConfiguration<Object, Object> mutable = new MutableConfiguration<>();
-
-            mutable.setExpiryPolicyFactory(
-                new CacheRedisExpiryPolicyFactory(
-                    redisConfig.ttl.get(cacheName), cacheName
-                )
-            );
 
             result =
                 cacheManager.createCache(
                     cacheName,
-                    RedissonConfiguration.fromConfig(cfg, mutable)
+                    configurationFactory.create(cacheName)
                 );
             log.debug("cache {} created.", cacheName);
         }
