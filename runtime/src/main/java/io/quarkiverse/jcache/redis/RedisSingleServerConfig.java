@@ -6,7 +6,7 @@ import io.quarkus.runtime.annotations.ConfigGroup;
 import io.quarkus.runtime.annotations.ConfigItem;
 
 @ConfigGroup
-public class CacheRedisSingleServerConfig {
+public class RedisSingleServerConfig {
 
     /**
      * To enable single server configuration.

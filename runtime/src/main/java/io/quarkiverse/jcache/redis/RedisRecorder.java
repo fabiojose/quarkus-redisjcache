@@ -11,14 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Recorder
-public class CacheRedisRecorder {
+public class RedisRecorder {
 
     private static final Logger log = LoggerFactory.getLogger(
-        CacheRedisRecorder.class
+        RedisRecorder.class
     );
 
     @Inject
-    CacheRedisConfig config;
+    RedisConfig config;
 
     private void createCache(String cacheName, CacheManager manager) {
         Cache cache = manager.getCache(cacheName);

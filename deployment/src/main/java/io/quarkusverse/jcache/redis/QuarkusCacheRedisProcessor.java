@@ -2,7 +2,7 @@ package io.quarkusverse.jcache.redis;
 
 import io.quarkiverse.jcache.CacheManagerProducer;
 import io.quarkiverse.jcache.CachePutInterceptor;
-import io.quarkiverse.jcache.redis.CacheRedisRecorder;
+import io.quarkiverse.jcache.redis.RedisRecorder;
 import io.quarkiverse.jcache.redis.RedisJCacheConfigurationFactory;
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.arc.deployment.BeanContainerBuildItem;
@@ -70,7 +70,7 @@ class QuarkusCacheRedisProcessor {
     @BuildStep
     @Record(value = ExecutionTime.RUNTIME_INIT)
     public void bootstrap(
-        CacheRedisRecorder recorder,
+        RedisRecorder recorder,
         BeanContainerBuildItem containerBuildItem
     ) {
         final IndexView index = combinedIndexBuildItem.getIndex();

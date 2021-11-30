@@ -28,7 +28,7 @@ public class RedisJCacheConfigurationFactory implements JCacheConfigurationFacto
     );
     
     @Inject
-    CacheRedisConfig redisConfig;
+    RedisConfig redisConfig;
 
     private ObjectMapper yamlMapper;
     private ObjectMapper getYamlMapper() {

@@ -8,7 +8,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @ConfigRoot(name = "cache.redis", phase = ConfigPhase.RUN_TIME)
-public class CacheRedisConfig {
+public class RedisConfig {
 
     /**
      * Threads amount shared across all listeners of RTopic object, invocation handlers of RRemoteService, RTopic object and RExecutorService tasks.
@@ -42,5 +42,5 @@ public class CacheRedisConfig {
     /**
      * Single instance configuration
      */
-    public CacheRedisSingleServerConfig singleServerConfig;
+    public RedisSingleServerConfig singleServerConfig;
 }
