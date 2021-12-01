@@ -1,20 +1,22 @@
 package io.quarkiverse.jcache.redis;
 
-import io.quarkiverse.jcache.CacheCreationStrategy;
-import io.quarkus.runtime.annotations.ConfigItem;
-import io.quarkus.runtime.annotations.ConfigPhase;
-import io.quarkus.runtime.annotations.ConfigRoot;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
+import io.quarkiverse.jcache.CacheCreationStrategy;
+import io.quarkus.runtime.annotations.ConfigItem;
+import io.quarkus.runtime.annotations.ConfigPhase;
+import io.quarkus.runtime.annotations.ConfigRoot;
 
 @ConfigRoot(name = "cache.redis", phase = ConfigPhase.RUN_TIME)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RedisConfig {
 
     /**
-     * Threads amount shared across all listeners of RTopic object, invocation handlers of RRemoteService, RTopic object and RExecutorService tasks.
+     * Threads amount shared across all listeners of RTopic object, invocation handlers of RRemoteService, RTopic object and
+     * RExecutorService tasks.
      */
     @ConfigItem(defaultValue = "16")
     public Integer threads;
@@ -48,7 +50,7 @@ public class RedisConfig {
     @ConfigItem(defaultValue = "ON_DEMAND")
     @JsonIgnore
     public CacheCreationStrategy creation;
-    
+
     /**
      * Single instance configuration
      */
@@ -60,7 +62,7 @@ public class RedisConfig {
     public RedisClusterServersConfig clusterServersConfig;
 
     public RedisSingleServerConfig getSingleServerConfig() {
-        if(singleServerConfig.enabled){
+        if (singleServerConfig.enabled) {
             return singleServerConfig;
         }
 
@@ -68,7 +70,7 @@ public class RedisConfig {
     }
 
     public RedisClusterServersConfig getClusterServersConfig() {
-        if(clusterServersConfig.enabled) {
+        if (clusterServersConfig.enabled) {
             return clusterServersConfig;
         }
 

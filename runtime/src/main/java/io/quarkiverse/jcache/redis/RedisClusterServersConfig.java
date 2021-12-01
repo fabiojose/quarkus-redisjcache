@@ -6,12 +6,14 @@ import io.quarkus.runtime.annotations.ConfigGroup;
 import io.quarkus.runtime.annotations.ConfigItem;
 
 /**
- * This type follow the definition of Redission for single nome configuration: https://github.com/redisson/redisson/wiki/2.-Configuration#241-cluster-settings
+ * This type follow the definition of Redission for single nome configuration:
+ * https://github.com/redisson/redisson/wiki/2.-Configuration#241-cluster-settings
+ * 
  * @author fabiojose@gmail.com
  */
 @ConfigGroup
 public class RedisClusterServersConfig extends AbstractRedisServerConfig {
-    
+
     /**
      * Enables cluster slots check during Redisson startup.
      */
@@ -19,7 +21,8 @@ public class RedisClusterServersConfig extends AbstractRedisServerConfig {
     public Boolean checkSlotsCoverage;
 
     /**
-     * Interval of Redis Slave reconnection attempt when it was excluded from internal list of available servers. On each timeout event Redisson tries to connect to disconnected Redis server.
+     * Interval of Redis Slave reconnection attempt when it was excluded from internal list of available servers. On each
+     * timeout event Redisson tries to connect to disconnected Redis server.
      * <br>
      * Value in milliseconds.
      */
@@ -27,7 +30,8 @@ public class RedisClusterServersConfig extends AbstractRedisServerConfig {
     public Long failedSlaveReconnectionInterval;
 
     /**
-     * Redis Slave node failing to execute commands is excluded from the internal list of available nodes when the time interval from the moment of first Redis command execution failure on this server reaches defined value.
+     * Redis Slave node failing to execute commands is excluded from the internal list of available nodes when the time interval
+     * from the moment of first Redis command execution failure on this server reaches defined value.
      * <br/>
      * Value in milliseconds.
      */

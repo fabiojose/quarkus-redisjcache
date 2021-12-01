@@ -1,11 +1,8 @@
 package io.quarkiverse.jcache;
 
-import io.quarkus.cache.runtime.AbstractCache;
-import io.quarkus.cache.runtime.CacheInterceptionContext;
-import io.quarkus.cache.runtime.CacheInterceptor;
-import io.smallrye.mutiny.Uni;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
+
 import javax.annotation.Priority;
 import javax.cache.Cache;
 import javax.cache.annotation.CachePut;
@@ -13,8 +10,14 @@ import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.quarkus.cache.runtime.AbstractCache;
+import io.quarkus.cache.runtime.CacheInterceptionContext;
+import io.quarkus.cache.runtime.CacheInterceptor;
+import io.smallrye.mutiny.Uni;
 
 /**
  * @author fabiojose@gmail.com
@@ -24,12 +27,10 @@ import org.slf4j.LoggerFactory;
 @Priority(1000)
 public class CachePutInterceptor extends CacheInterceptor {
 
-    private static final String INTERCEPTOR_BINDING_ERROR_MSG =
-        "No binding type";
+    private static final String INTERCEPTOR_BINDING_ERROR_MSG = "No binding type";
 
     private static final Logger log = LoggerFactory.getLogger(
-        CachePutInterceptor.class
-    );
+            CachePutInterceptor.class);
 
     @Inject
     CacheFactory cacheFactory;
@@ -37,10 +38,9 @@ public class CachePutInterceptor extends CacheInterceptor {
     @AroundInvoke
     public Object intercept(InvocationContext context) throws Exception {
         final CacheInterceptionContext<CachePut> interceptionContext = getInterceptionContext(
-            context,
-            CachePut.class,
-            true
-        );
+                context,
+                CachePut.class,
+                true);
 
         if (interceptionContext.getInterceptorBindings().isEmpty()) {
             log.warn(INTERCEPTOR_BINDING_ERROR_MSG);
@@ -48,24 +48,22 @@ public class CachePutInterceptor extends CacheInterceptor {
         }
 
         final CachePut binding = interceptionContext
-            .getInterceptorBindings()
-            .iterator()
-            .next();
+                .getInterceptorBindings()
+                .iterator()
+                .next();
 
         //TODO: CacheKey
         //TODO: Cache Key as String
         Object key = getCacheKey(
-            new DefaultCache(binding.cacheName()),
-            interceptionContext.getCacheKeyParameterPositions(),
-            context.getParameters()
-        );
+                new DefaultCache(binding.cacheName()),
+                interceptionContext.getCacheKeyParameterPositions(),
+                context.getParameters());
         key = key.toString();
 
         log.debug(
-            "loading entry with key {} from cache {}",
-            key,
-            binding.cacheName()
-        );
+                "loading entry with key {} from cache {}",
+                key,
+                binding.cacheName());
 
         final Cache<Object, Object> cache = cacheFactory.getOrCreate(binding.cacheName());
 
@@ -76,10 +74,9 @@ public class CachePutInterceptor extends CacheInterceptor {
 
         if (null == result) {
             log.debug(
-                "no entry found for key {} in the cache {}",
-                key,
-                binding.cacheName()
-            );
+                    "no entry found for key {} in the cache {}",
+                    key,
+                    binding.cacheName());
             result = context.proceed();
             log.debug("value from called context {}", result);
 
@@ -103,15 +100,14 @@ public class CachePutInterceptor extends CacheInterceptor {
         }
 
         @Override
-        public String toString(){
+        public String toString() {
             return getName();
         }
 
         @Override
         public CompletableFuture<Object> get(
-            Object key,
-            Function<Object, Object> valueLoader
-        ) {
+                Object key,
+                Function<Object, Object> valueLoader) {
             throw new UnsupportedOperationException();
         }
 

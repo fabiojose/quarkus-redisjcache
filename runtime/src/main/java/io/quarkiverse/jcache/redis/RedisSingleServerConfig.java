@@ -4,7 +4,9 @@ import io.quarkus.runtime.annotations.ConfigGroup;
 import io.quarkus.runtime.annotations.ConfigItem;
 
 /**
- * This type follow the definition of Redission for single nome configuration: https://github.com/redisson/redisson/wiki/2.-Configuration#262-single-instance-yaml-config-format
+ * This type follow the definition of Redission for single nome configuration:
+ * https://github.com/redisson/redisson/wiki/2.-Configuration#262-single-instance-yaml-config-format
+ * 
  * @author fabiojose@gmail.com
  */
 @ConfigGroup

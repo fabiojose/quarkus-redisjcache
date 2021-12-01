@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.runtime.annotations.ConfigItem;
 
 public abstract class AbstractRedisServerConfig {
-    
+
     /**
      * To enable this kind of configuration.
      */
@@ -34,12 +34,13 @@ public abstract class AbstractRedisServerConfig {
     public String clientName;
 
     /**
-     * If pooled connection not used for a timeout time and current connections amount bigger than minimum idle connections pool size, then it will closed and removed from pool.
+     * If pooled connection not used for a timeout time and current connections amount bigger than minimum idle connections pool
+     * size, then it will closed and removed from pool.
      * <br/>
      * Value in milliseconds.
      */
     @ConfigItem(defaultValue = "10000")
-    public Long idleConnectionTimeout; 
+    public Long idleConnectionTimeout;
 
     /**
      * Timeout during connecting to any Redis server.
@@ -106,7 +107,9 @@ public abstract class AbstractRedisServerConfig {
     /**
      * Defines SSL provider (<code>JDK<code> or <code>OPENSSL</code>) used to handle SSL connections.
      * <br/>
-     * <code>OPENSSL</code> considered as faster implementation and requires <a href="https://repo1.maven.org/maven2/io/netty/netty-tcnative-boringssl-static/">netty-tcnative-boringssl-static</a> to be added in classpath.
+     * <code>OPENSSL</code> considered as faster implementation and requires
+     * <a href="https://repo1.maven.org/maven2/io/netty/netty-tcnative-boringssl-static/">netty-tcnative-boringssl-static</a> to
+     * be added in classpath.
      */
     @ConfigItem(defaultValue = "JDK")
     public String sslProvider;
@@ -128,7 +131,8 @@ public abstract class AbstractRedisServerConfig {
     /**
      * Defines path to SSL keystore.
      * <br/>
-     * It's stores private key and certificates corresponding to their public keys. Used if server side of SSL connection requires client authentication.
+     * It's stores private key and certificates corresponding to their public keys. Used if server side of SSL connection
+     * requires client authentication.
      */
     @ConfigItem(defaultValue = "null")
     public String sslKeystore;
@@ -140,11 +144,11 @@ public abstract class AbstractRedisServerConfig {
     public String sslKeystorePassword;
 
     public String getUsername() {
-        return  ("null".equals(username) ? null : username);
+        return ("null".equals(username) ? null : username);
     }
 
     public String getPassword() {
-        return  ("null".equals(password) ? null : password);
+        return ("null".equals(password) ? null : password);
     }
 
     public String getClientName() {

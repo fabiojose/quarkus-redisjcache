@@ -15,10 +15,9 @@ import io.quarkiverse.jcache.CacheFactory;
  */
 @ApplicationScoped
 public class RedisCacheFactory implements CacheFactory {
-    
+
     private static final Logger log = LoggerFactory.getLogger(
-        RedisCacheFactory.class
-    );
+            RedisCacheFactory.class);
 
     @Inject
     RedisConfig redisConfig;
@@ -33,7 +32,7 @@ public class RedisCacheFactory implements CacheFactory {
     public Cache<Object, Object> getOrCreate(String cacheName) {
 
         var result = cacheManager.getCache(cacheName);
-        if(null== result) {
+        if (null == result) {
             log.debug("cache {} not found, creating . . .", cacheName);
             result = cacheManager.createCache(cacheName, configFactory.create(cacheName));
             log.debug("cache {} created", cacheName);
@@ -43,5 +42,5 @@ public class RedisCacheFactory implements CacheFactory {
 
         return result;
     }
-    
+
 }
