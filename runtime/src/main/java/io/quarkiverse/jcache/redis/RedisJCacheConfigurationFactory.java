@@ -39,11 +39,25 @@ public class RedisJCacheConfigurationFactory implements JCacheConfigurationFacto
         return yamlMapper;
     }
 
+    private RedisConfig withEnabledServerConfig(RedisConfig redisConfig){
+
+        if( redisConfig.singleServerConfig.enabled ^ redisConfig.clusterServersConfig.enabled){
+
+        } else {
+            throw new IllegalStateException("Just one type of server configuration is allowed");
+        }
+
+        return redisConfig;
+    }
+
     private Config redissonYamlConfiguration()
         throws IOException, JsonProcessingException {
-        final String yaml = getYamlMapper().writeValueAsString(redisConfig);
+        
+        final RedisConfig actualRedisConfig = withEnabledServerConfig(redisConfig);
+
+        final String yaml = getYamlMapper().writeValueAsString(actualRedisConfig);
         if (log.isDebugEnabled()) {
-            log.info("loaded redisson yaml configuration \n{}", yaml);
+            log.debug("loaded redisson yaml configuration \n{}", yaml);
         }
 
         return Config.fromYAML(yaml);

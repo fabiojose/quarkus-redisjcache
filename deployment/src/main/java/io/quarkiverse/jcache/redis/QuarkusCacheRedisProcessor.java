@@ -1,10 +1,7 @@
-package io.quarkusverse.jcache.redis;
+package io.quarkiverse.jcache.redis;
 
 import io.quarkiverse.jcache.CacheManagerProducer;
 import io.quarkiverse.jcache.CachePutInterceptor;
-import io.quarkiverse.jcache.redis.RedisRecorder;
-import io.quarkiverse.jcache.redis.RedisCacheFactory;
-import io.quarkiverse.jcache.redis.RedisJCacheConfigurationFactory;
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.arc.deployment.BeanContainerBuildItem;
 import io.quarkus.arc.deployment.InterceptorBindingRegistrarBuildItem;
@@ -30,7 +27,7 @@ import org.slf4j.LoggerFactory;
 class QuarkusCacheRedisProcessor {
 
     private static final String CACHE_NAME = "cacheName";
-    private static final String FEATURE = "quarkus-cache-redis";
+    private static final String FEATURE = "quarkus-jcacheredis";
     private static final DotName CACHE_PUT = DotName.createSimple(
         CachePut.class.getName()
     );

@@ -2,8 +2,8 @@ package io.quarkiverse.jcache.redis;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +13,7 @@ import io.quarkiverse.jcache.CacheFactory;
 /**
  * @author fabiojose@gmail.com
  */
-@Singleton
+@ApplicationScoped
 public class RedisCacheFactory implements CacheFactory {
     
     private static final Logger log = LoggerFactory.getLogger(

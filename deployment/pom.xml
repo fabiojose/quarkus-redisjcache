@@ -3,13 +3,20 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.github.fabiojose.quarkus</groupId>
-    <artifactId>quarkus-cache-redis-parent</artifactId>
+    <groupId>io.quarkiverse.jcacheredis</groupId>
+    <artifactId>quarkus-jcacheredis-parent</artifactId>
     <version>0.21</version>
   </parent>
-  <artifactId>quarkus-cache-redis-deployment</artifactId>
-  <name>Quarkus Cache Redis - Deployment</name>
+  <artifactId>quarkus-jcacheredis-deployment</artifactId>
+
+  <name>Quarkus JCache Redis - Deployment</name>
+
   <dependencies>
+    <dependency>
+      <groupId>io.quarkiverse.jcacheredis</groupId>
+      <artifactId>quarkus-jcacheredis</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <dependency>
       <groupId>javax.cache</groupId>
       <artifactId>cache-api</artifactId>
@@ -27,11 +34,6 @@
       <groupId>org.redisson</groupId>
       <artifactId>redisson-quarkus-20-deployment</artifactId>
       <version>3.16.4</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.fabiojose.quarkus</groupId>
-      <artifactId>quarkus-cache-redis</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>

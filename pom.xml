@@ -2,11 +2,13 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.github.fabiojose.quarkus</groupId>
-  <artifactId>quarkus-cache-redis-parent</artifactId>
+
+  <groupId>io.quarkiverse.jcacheredis</groupId>
+  <artifactId>quarkus-jcacheredis-parent</artifactId>
+
   <version>0.21</version>
   <packaging>pom</packaging>
-  <name>Quarkus Cache Redis - Parent</name>
+  <name>Quarkus JCache Redis - Parent</name>
 
   <modules>
     <module>deployment</module>

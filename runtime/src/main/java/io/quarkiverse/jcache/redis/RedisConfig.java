@@ -7,8 +7,10 @@ import io.quarkus.runtime.annotations.ConfigRoot;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 @ConfigRoot(name = "cache.redis", phase = ConfigPhase.RUN_TIME)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RedisConfig {
 
     /**
@@ -51,4 +53,25 @@ public class RedisConfig {
      * Single instance configuration
      */
     public RedisSingleServerConfig singleServerConfig;
+
+    /**
+     * Cluster configuration
+     */
+    public RedisClusterServersConfig clusterServersConfig;
+
+    public RedisSingleServerConfig getSingleServerConfig() {
+        if(singleServerConfig.enabled){
+            return singleServerConfig;
+        }
+
+        return null;
+    }
+
+    public RedisClusterServersConfig getClusterServersConfig() {
+        if(clusterServersConfig.enabled) {
+            return clusterServersConfig;
+        }
+
+        return null;
+    }
 }
