@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.quarkiverse</groupId>
+    <artifactId>quarkiverse-parent</artifactId>
+    <version>8</version>
+  </parent>
 
   <groupId>io.quarkiverse.jcacheredis</groupId>
   <artifactId>quarkus-jcacheredis-parent</artifactId>
-
   <version>0.21</version>
   <packaging>pom</packaging>
   <name>Quarkus JCache Redis - Parent</name>
@@ -14,7 +17,6 @@
     <module>deployment</module>
     <module>runtime</module>
   </modules>
-
   <properties>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <failsafe-plugin.version>${surefire-plugin.version}</failsafe-plugin.version>
@@ -26,6 +28,22 @@
     <quarkus.version>2.5.0.Final</quarkus.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
   </properties>
+
+  <profiles>
+    <profile>
+      <id>it</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>!true</value>
+        </property>
+      </activation>
+      <modules>
+        <module>integration-tests</module>
+      </modules>
+    </profile>
+  </profiles>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
