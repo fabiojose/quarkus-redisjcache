@@ -34,4 +34,31 @@ public class GreetingResourceTest {
 
     }
 
+    @Test
+    void should_reponse_the_cached_value_with_dynamic_cache_key() {
+
+        var expected = given()
+                .when().get("/hello/term?name=UnitTest")
+                .as(Found.class);
+
+        given()
+                .when().get("/hello/term?name=UnitTest")
+                .then()
+                .statusCode(200)
+                .body("term", is(expected.getTerm()));
+    }
+
+    @Test
+    void should_reponse_the_cached_value_with_two_cache_key() {
+
+        var expected = given()
+                .when().get("/hello/sort?name=Sorting&sort=ASC")
+                .as(Found.class);
+
+        given()
+                .when().get("/hello/sort?name=Sorting&sort=ASC")
+                .then()
+                .statusCode(200)
+                .body("term", is(expected.getTerm()));
+    }
 }

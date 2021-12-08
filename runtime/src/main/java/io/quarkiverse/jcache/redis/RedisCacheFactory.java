@@ -37,7 +37,7 @@ public class RedisCacheFactory implements CacheFactory {
             result = cacheManager.createCache(cacheName, configFactory.create(cacheName));
             log.debug("cache {} created", cacheName);
         } else {
-            log.debug("cache {} already created and configured.");
+            log.debug("cache {} already created and configured.", cacheName);
         }
 
         return result;

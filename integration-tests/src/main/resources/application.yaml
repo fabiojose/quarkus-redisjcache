@@ -2,12 +2,12 @@ quarkus:
   log:
     level: INFO
     category:
-      configureme:
-        level: INFO
+      io.quarkiverse:
+        level: DEBUG
     console:
       color: false
   redis:
-    devservices: # Mais detalhes em https://quarkus.io/guides/redis-dev-services
+    devservices: # See more at https://quarkus.io/guides/redis-dev-services
       enabled: true
       port: 36379
   cache:
@@ -20,12 +20,3 @@ quarkus:
         ping-response: 3600000
       creation: ON_STARTUP
 
-"%test": # Para executar durante a fase teste da construção: quarkus.test.profile
-  quarkus:
-    log:
-      level: INFO
-      category:
-        configureme:
-          level: INFO
-      console:
-        color: false

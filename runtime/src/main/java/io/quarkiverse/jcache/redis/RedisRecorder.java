@@ -23,7 +23,7 @@ public class RedisRecorder {
         if (CacheCreationStrategy.ON_STARTUP.equals(config.creation)) {
             final CacheFactory factory = container.instance(CacheFactory.class);
 
-            log.info(
+            log.debug(
                     "creating and configuring cache {}",
                     cacheName);
 

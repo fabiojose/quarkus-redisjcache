@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import io.quarkus.cache.runtime.AbstractCache;
 import io.quarkus.cache.runtime.CacheInterceptionContext;
 import io.quarkus.cache.runtime.CacheInterceptor;
+import io.quarkus.cache.runtime.CompositeCacheKey;
+import io.quarkus.cache.runtime.DefaultCacheKey;
 import io.smallrye.mutiny.Uni;
 
 /**
@@ -34,6 +36,25 @@ public class CachePutInterceptor extends CacheInterceptor {
 
     @Inject
     CacheFactory cacheFactory;
+
+    private static final Object keyOf(final Object o, final String cacheName) {
+
+        Object key = null;
+
+        if (o instanceof String) {
+            key = o;
+        } else if (o instanceof CompositeCacheKey) {
+            key = o.hashCode();
+        } else if (o instanceof DefaultCacheKey) {
+            key = cacheName;
+        } else {
+            key = o.toString();
+        }
+
+        log.debug("resolved key entry {} in the cache {}", key, cacheName);
+
+        return key;
+    }
 
     @AroundInvoke
     public Object intercept(InvocationContext context) throws Exception {
@@ -54,11 +75,13 @@ public class CachePutInterceptor extends CacheInterceptor {
 
         //TODO: CacheKey
         //TODO: Cache Key as String
+
         Object key = getCacheKey(
                 new DefaultCache(binding.cacheName()),
                 interceptionContext.getCacheKeyParameterPositions(),
                 context.getParameters());
-        key = key.toString();
+
+        key = keyOf(key, binding.cacheName());
 
         log.debug(
                 "loading entry with key {} from cache {}",
