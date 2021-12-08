@@ -1,0 +1,31 @@
+quarkus:
+  log:
+    level: INFO
+    category:
+      configureme:
+        level: INFO
+    console:
+      color: false
+  redis:
+    devservices: # Mais detalhes em https://quarkus.io/guides/redis-dev-services
+      enabled: true
+      port: 36379
+  cache:
+    redis:
+      single-server-config:
+        enabled: true
+        address: redis://localhost:36379
+        password: null
+      ttl:
+        ping-response: 3600000
+      creation: ON_STARTUP
+
+"%test": # Para executar durante a fase teste da construção: quarkus.test.profile
+  quarkus:
+    log:
+      level: INFO
+      category:
+        configureme:
+          level: INFO
+      console:
+        color: false
