@@ -2,6 +2,8 @@
 
 Distributed caching with Redis and JCache (JSR-107).
 
+- [See usage examples](integration-tests/src/main/java/io/quarkiverse/jcacheredis/GreetingResource.java)  
+
 > Many thanks for [Redisson JCache](https://redisson.org/glossary/jcache.html).
 
 ## Supported features
