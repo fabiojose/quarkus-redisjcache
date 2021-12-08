@@ -14,7 +14,6 @@
 
   <properties>
     <redisson.version>3.16.4</redisson.version>
-    <kryo.version>5.2.0</kryo.version>
   </properties>
 
   <dependencies>
