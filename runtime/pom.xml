@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.quarkiverse.jcacheredis</groupId>
     <artifactId>quarkus-jcacheredis-parent</artifactId>
-    <version>0.21</version>
+    <version>0.22</version>
   </parent>
 
   <artifactId>quarkus-jcacheredis</artifactId>

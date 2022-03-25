@@ -4,12 +4,12 @@
     <parent>
         <groupId>io.quarkiverse.jcacheredis</groupId>
         <artifactId>quarkus-jcacheredis-parent</artifactId>
-        <version>0.21</version>
+        <version>0.22</version>
     </parent>
 
     <groupId>io.quarkiverse.jcacheredis</groupId>
     <artifactId>integration-tests</artifactId>
-    <version>0.21</version>
+    <version>0.22</version>
 
     <properties>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
@@ -20,7 +20,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>2.5.1.Final</quarkus.platform.version>
+        <quarkus.platform.version>2.7.5.Final</quarkus.platform.version>
         <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     </properties>
 

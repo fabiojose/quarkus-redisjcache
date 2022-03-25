@@ -1,6 +1,5 @@
 package io.quarkiverse.jcache;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 import javax.annotation.Priority;
@@ -14,11 +13,11 @@ import javax.interceptor.InvocationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.quarkus.cache.CompositeCacheKey;
+import io.quarkus.cache.DefaultCacheKey;
 import io.quarkus.cache.runtime.AbstractCache;
 import io.quarkus.cache.runtime.CacheInterceptionContext;
 import io.quarkus.cache.runtime.CacheInterceptor;
-import io.quarkus.cache.runtime.CompositeCacheKey;
-import io.quarkus.cache.runtime.DefaultCacheKey;
 import io.smallrye.mutiny.Uni;
 
 /**
@@ -128,19 +127,17 @@ public class CachePutInterceptor extends CacheInterceptor {
         }
 
         @Override
-        public CompletableFuture<Object> get(
-                Object key,
-                Function<Object, Object> valueLoader) {
+        public <K, V> Uni<V> get(K key, Function<K, V> valueLoader) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void invalidate(Object key) {
+        public Uni<Void> invalidate(Object key) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void invalidateAll() {
+        public Uni<Void> invalidateAll() {
             throw new UnsupportedOperationException();
         }
 
